@@ -34,14 +34,13 @@ class MonitoringApi(
         val result = endpointService.createEndpoint(
                 endpointDto.name,
                 endpointDto.url,
-                endpointDto.operation,
                 endpointDto.monitoringInterval,
                 endpointDto.owners
         )
 
         when (result) {
             is EndpointResult.Success -> return MonitoredEndpointDto.fromModel(result.monitoringEndpoint)
-            is EndpointResult.Error -> throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, result.message)
+            is EndpointResult.Error -> throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, result.errorMessage)
         }
     }
 

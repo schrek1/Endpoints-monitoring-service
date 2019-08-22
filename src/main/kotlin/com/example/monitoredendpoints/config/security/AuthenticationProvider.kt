@@ -2,10 +2,10 @@ package com.example.monitoredendpoints.config.security
 
 import com.example.monitoredendpoints.service.*
 import org.springframework.beans.factory.annotation.*
+import org.springframework.security.authentication.*
 import org.springframework.security.authentication.dao.*
-import org.springframework.stereotype.*
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.*
+import org.springframework.stereotype.*
 
 
 @Component

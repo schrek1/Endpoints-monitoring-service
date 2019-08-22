@@ -1,15 +1,16 @@
 package com.example.monitoredendpoints.service
 
-import com.example.monitoredendpoints.response.*
 import com.example.monitoredendpoints.model.*
-import com.example.monitoredendpoints.model.enum.*
 import com.example.monitoredendpoints.repository.*
+import com.example.monitoredendpoints.response.*
 import com.example.monitoredendpoints.utils.*
 import org.springframework.stereotype.*
 import java.time.*
 import java.util.*
+import javax.transaction.*
 
 @Service
+@Transactional
 class EndpointService(
         private val userService: UserService,
         private val endpointRepo: EndpointRepository
@@ -37,7 +38,7 @@ class EndpointService(
                     }
 
                 }
-                is EndpointResult.Error -> EndpointResult.Error.NotAssigned(reason = endpointResult.message)
+                is EndpointResult.Error -> EndpointResult.Error.NotAssigned(reason = endpointResult.errorMessage)
             }
 
 
@@ -57,7 +58,7 @@ class EndpointService(
             }
 
 
-    fun createEndpoint(name: String, url: String, operation: RestOperation, monitoringInterval: Int, owners: List<String>): EndpointResult {
+    fun createEndpoint(name: String, url: String, monitoringInterval: Int, owners: List<String>): EndpointResult {
         val users = mutableListOf<User>()
 
         for (userId in owners) {
@@ -71,7 +72,6 @@ class EndpointService(
                 id = Utils.getNullUUID(),
                 name = name,
                 url = url,
-                operation = operation,
                 creation = LocalDateTime.now(),
                 lastCheck = LocalDateTime.now(),
                 monitoringInterval = monitoringInterval,
@@ -93,5 +93,6 @@ class EndpointService(
                 is UserResult.Error -> emptyList()
             }
 
+    fun updateEndpoint(endpoint: MonitoredEndpoint) = endpointRepo.save(endpoint)
 
 }

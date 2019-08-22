@@ -4,20 +4,20 @@ import com.example.monitoredendpoints.model.*
 
 sealed class EndpointResult {
     class Success(val monitoringEndpoint: MonitoredEndpoint) : EndpointResult()
-    sealed class Error(val message: String) : EndpointResult() {
+    sealed class Error(val errorMessage: String) : EndpointResult() {
         class NotCreated(
                 private val reason: String,
-                message: String = "Endpoint not created because: $reason"
-        ) : Error(message)
+                errorMessage: String = "Endpoint not created because: $reason"
+        ) : Error(errorMessage)
 
         class NotFound(
                 private val endpointId: String = "",
-                message: String = "Monitored endpoint with id=$endpointId not found"
-        ) : Error(message)
+                errorMessage: String = "Monitored endpoint with id=$endpointId not found"
+        ) : Error(errorMessage)
 
         class NotAssigned(
                 private val reason: String,
-                message: String = "Endpoint isn't assigned because: $reason"
-        ) : Error(message)
+                errorMessage: String = "Endpoint isn't assigned because: $reason"
+        ) : Error(errorMessage)
     }
 }

@@ -1,16 +1,16 @@
 package com.example.monitoredendpoints.service
 
-import com.example.monitoredendpoints.response.*
 import com.example.monitoredendpoints.model.*
 import com.example.monitoredendpoints.repository.*
+import com.example.monitoredendpoints.response.*
 import com.example.monitoredendpoints.utils.*
 import org.springframework.stereotype.*
 import java.util.*
-import java.util.function.Function
-import java.util.function.Supplier
+import javax.transaction.*
 
 
 @Service
+@Transactional
 class UserService(
         private val hashGenerator: HashGenerator,
         private val userRepo: UserRepository

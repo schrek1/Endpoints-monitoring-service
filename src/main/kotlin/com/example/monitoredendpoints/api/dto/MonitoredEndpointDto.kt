@@ -1,27 +1,20 @@
 package com.example.monitoredendpoints.api.dto
 
 import com.example.monitoredendpoints.model.*
-import com.example.monitoredendpoints.model.enum.*
 import java.time.*
 import javax.validation.constraints.*
 
 data class MonitoredEndpointDto(
         val id: String,
 
-        @NotBlank(message = "name must be filled")
         val name: String,
 
-        @NotBlank(message = "url must be filled")
         val url: String,
-
-        @NotNull(message = "operation must be filled")
-        val operation: RestOperation,
 
         val creation: LocalDateTime,
 
         val lastCheck: LocalDateTime,
 
-        @NotNull(message = "monitoring interval must be filled")
         val monitoringInterval: Int,
 
         val owners: List<String>,
@@ -34,7 +27,6 @@ data class MonitoredEndpointDto(
                         id = model.id.toString(),
                         name = model.name,
                         url = model.url,
-                        operation = model.operation,
                         creation = model.creation,
                         lastCheck = model.lastCheck,
                         monitoringInterval = model.monitoringInterval,
