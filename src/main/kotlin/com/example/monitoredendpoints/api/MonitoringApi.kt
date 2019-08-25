@@ -4,6 +4,7 @@ import com.example.monitoredendpoints.api.dto.*
 import com.example.monitoredendpoints.response.*
 import com.example.monitoredendpoints.service.*
 import com.example.monitoredendpoints.utils.*
+import io.swagger.annotations.*
 import org.springframework.http.*
 import org.springframework.security.core.*
 import org.springframework.validation.annotation.*
@@ -23,8 +24,8 @@ class MonitoringApi(
             .map { MonitoredEndpointDto.fromModel(it) }
             .toList()
 
-    // todo remove
     @GetMapping("/all")
+    @ApiOperation(tags = ["testing"], value = "get all endpoints without constrains")
     fun getAllEndpoints() = endpointService.getAllEndpoints().asSequence()
             .map { MonitoredEndpointDto.fromModel(it) }
             .toList()

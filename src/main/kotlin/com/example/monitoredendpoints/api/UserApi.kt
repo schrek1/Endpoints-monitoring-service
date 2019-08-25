@@ -3,6 +3,7 @@ package com.example.monitoredendpoints.api
 import com.example.monitoredendpoints.api.dto.*
 import com.example.monitoredendpoints.response.*
 import com.example.monitoredendpoints.service.*
+import io.swagger.annotations.*
 import org.springframework.http.*
 import org.springframework.validation.annotation.*
 import org.springframework.web.bind.annotation.*
