@@ -9,12 +9,13 @@ import org.junit.Assert.*
 import org.junit.runner.*
 import org.mockito.*
 import org.mockito.ArgumentMatchers.*
-import org.mockito.Mockito.*
 import org.springframework.boot.test.context.*
 import org.springframework.test.context.junit4.*
 import java.time.*
 import java.util.*
 import org.mockito.Mockito.`when` as mockitoWhen
+import org.mockito.Mockito.any
+
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -147,5 +148,93 @@ class EndpointServiceTest {
         if (endpointResult !is EndpointResult.Error.NotFound) {
             fail("endpoint is not EndpointResult.Error.NotFound")
         }
+    }
+
+    @Test
+    fun createEndpointSuccess() {
+
+        mockitoWhen(userService.getUserById(anyString())).thenReturn(UserResult.Success(user))
+
+        mockitoWhen(endpointRepo.save(any<MonitoredEndpoint>())).thenAnswer { invocation -> invocation.arguments[0] as MonitoredEndpoint }
+
+        val result = endpointService.createEndpoint(
+                name = monitoredEndpoint.name,
+                url = monitoredEndpoint.url,
+                monitoringInterval = monitoredEndpoint.monitoringInterval,
+                owners = listOf(user.id.toString())
+        )
+
+        if (result is EndpointResult.Success) {
+            val endpoint = result.monitoringEndpoint
+
+            assertEquals(endpoint.name, monitoredEndpoint.name)
+            assertEquals(endpoint.owners, listOf(user))
+            assertEquals(endpoint.monitoringResults, emptyList<MonitoringResult>())
+            assertEquals(endpoint.monitoringInterval, monitoredEndpoint.monitoringInterval)
+        } else {
+            fail("endpoint is not EndpointResult.Success")
+        }
+    }
+
+    @Test
+    fun createEndpointOwnerNotExist() {
+        mockitoWhen(userService.getUserById(anyString())).thenReturn(UserResult.Error.NotFound())
+
+
+        val result = endpointService.createEndpoint(
+                name = monitoredEndpoint.name,
+                url = monitoredEndpoint.url,
+                monitoringInterval = monitoredEndpoint.monitoringInterval,
+                owners = listOf(user.id.toString())
+        )
+
+        if (result !is EndpointResult.Error.NotCreated) {
+            fail("endpoint is not EndpointResult.Error.NotCreated")
+        }
+    }
+
+    @Test
+    fun testGetEndpointsForUserSuccess() {
+        val resultList = listOf(monitoredEndpoint)
+
+        mockitoWhen(userService.getUserByToken(anyString())).thenReturn(UserResult.Success(user))
+
+        mockitoWhen(endpointRepo.findAllByOwners(kAny())).thenReturn(resultList)
+
+        val endpointsForUser = endpointService.getEndpointsForUser("id")
+
+        assertEquals(endpointsForUser, resultList)
+    }
+
+    @Test
+    fun testGetEndpointsForUserThatNotExists() {
+        mockitoWhen(userService.getUserByToken(anyString())).thenReturn(UserResult.Error.NotFound())
+
+        val endpointsForUser = endpointService.getEndpointsForUser("id")
+
+        assertEquals(endpointsForUser, emptyList<MonitoredEndpoint>())
+    }
+
+
+    @Test
+    fun testGetAllEndpoints() {
+        val endpoints = listOf(monitoredEndpoint)
+
+        mockitoWhen(endpointRepo.findAll()).thenReturn(endpoints)
+
+
+        val result = endpointService.getAllEndpoints()
+
+        assertEquals(result, endpoints)
+    }
+
+    @Test
+    fun testUpdateEndpoint() {
+
+        mockitoWhen(endpointRepo.save<MonitoredEndpoint>(kAny())).thenReturn(monitoredEndpoint)
+
+        val result = endpointService.updateEndpoint(monitoredEndpoint)
+
+        assertEquals(result, monitoredEndpoint)
     }
 }

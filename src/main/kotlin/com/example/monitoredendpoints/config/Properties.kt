@@ -5,6 +5,6 @@ import org.springframework.stereotype.*
 
 @Component
 class Properties {
-    @Value("\${custom.maxResultPersistence}")
+    @Value("\${app.memory.maxResultPersistence}")
     var maxMonitoringPersistence: Int = 10
 }
