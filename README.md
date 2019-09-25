@@ -1,5 +1,12 @@
 # Endpoints-monitoring-service
 Endpoints monitoring service
+ 
+Create REST API JSON Java microservice, which allows to monitor particular http/https urls.  
+ 
+The service should allow to: 
+1. Create, Edit, Delete monitored URLs and list them for particular user. (CRUD) 
+2. Monitor URL(s) on background and log status codes + returned payload 
+3. For each particular monitored URL to be able to list last 10  monitored results. 
 
 
 For run: 
